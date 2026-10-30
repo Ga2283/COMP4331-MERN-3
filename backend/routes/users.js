@@ -28,14 +28,10 @@ router.post('/register', async (req, res) => {
       verifyTokenExpires: Date.now() + 24 * 60 * 60 * 1000, // 24h
     });
 
-    // email failure shouldn't block registration
-    try {
-      await sendVerificationEmail(user.email, verifyToken);
-    } catch (e) {
-      console.error('Email failed:', e.message);
-    }
-
     res.status(201).json({ message: 'Registered. Check your email to verify.', userId: user._id });
+
+    // send email in background so a slow/blocked SMTP doesn't hold up the response
+    sendVerificationEmail(user.email, verifyToken).catch((e) => console.error('Email failed:', e.message));
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
