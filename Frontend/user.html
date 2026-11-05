@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCollection - Dashboard</title>
+    <!-- Local stylesheet reference (no external fonts or web links) -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="navbar">
+            <div class="logo">
+                <span class="logo-icon">📦</span>
+                <span class="logo-text">MyCollection</span>
+            </div>
+            <div class="user-profile">
+                <span class="username">Gabriel Flores</span>
+                <div class="avatar">G</div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Search & Filter Controls -->
+            <section class="controls-section">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search your collection...">
+                </div>
+                
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-category="All">All</button>
+                    <button class="filter-btn" data-category="Cards">Cards</button>
+                    <button class="filter-btn" data-category="Comic books">Comic books</button>
+                    <button class="filter-btn" data-category="Figurines">Figurines</button>
+                </div>
+
+                <button class="add-btn" id="openAddModalBtn">+ Add to your collection</button>
+            </section>
+
+            <!-- Collection Grid Container (4 columns x 3 rows = 12 items max per page) -->
+            <section class="grid-section">
+                <div class="grid-container" id="collectionGrid">
+                    <!-- Dynamic collection cards rendered via script.js -->
+                </div>
+            </section>
+
+            <!-- Pagination Control (Arrow Down for next 12 items) -->
+            <section class="pagination-section" id="paginationSection">
+                <button class="arrow-down-btn" id="nextPageBtn" title="Load Next Page">
+                    <span>▼</span>
+                    <span class="btn-text">Load Next 12 Items</span>
+                </button>
+                <div class="pagination-info" id="paginationInfo">Showing 1-12 of 12</div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Item</h3>
+                <button class="close-btn" id="closeAddModalBtn">&times;</button>
+            </div>
+            <form id="addItemForm">
+                <div class="form-group">
+                    <label for="itemName">Item Name</label>
+                    <input type="text" id="itemName" required placeholder="e.g. Charizard 1st Edition">
+                </div>
+                <div class="form-group">
+                    <label for="itemCategory">Category</label>
+                    <select id="itemCategory" required>
+                        <option value="Cards">Cards</option>
+                        <option value="Comic books">Comic books</option>
+                        <option value="Figurines">Figurines</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemDescription">Description</label>
+                    <textarea id="itemDescription" rows="3" placeholder="Mint condition, graded PSA 9..."></textarea>
+                </div>
+                
+                <!-- Image Input Mode Switcher (URL vs File Upload) -->
+                <div class="form-group">
+                    <label>Item Image</label>
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                        <button type="button" class="mode-tab-btn active" id="tabUrlBtn">Paste URL</button>
+                        <button type="button" class="mode-tab-btn" id="tabFileBtn">Upload File</button>
+                    </div>
+                    
+                    <div id="urlInputContainer">
+                        <input type="url" id="itemImageUrl" placeholder="https://example.com/image.jpg">
+                    </div>
+                    
+                    <div id="fileInputContainer" style="display: none;">
+                        <input type="file" id="itemImageFile" accept="image/*" class="file-input-field">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelModalBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
