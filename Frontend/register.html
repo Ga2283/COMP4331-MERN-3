@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create an Account</title>
+  <link rel="stylesheet" href="css/register.css" />
+  <!-- <script type="module" src="js/register.js"></script> -->
+</head>
+<body>
+
+  <header class="header">
+    <div class="app-icon">
+      <img src="../logo.png" alt="MyCollection Logo" class="register-logo">
+      <h1 class="register-title">MyCollection</h1>
+    </div>
+  </header>
+
+  <main class="content-container">
+    <div class="side-text">
+      <h2>Everything you collect, in one spot!</h2>
+
+      <div class="feature-item">
+        <h3>Add</h3>
+        <p>Catalog every card, comic, and figure you own.</p>
+      </div>
+
+      <div class="feature-item">
+        <h3>Share</h3>
+        <p>Show off your Shelf with friends and fellow collectors.</p>
+      </div>
+
+      <div class="feature-item">
+        <h3>Keep it together</h3>
+        <p>Your whole collection, all in one place.</p>
+      </div>
+    </div>
+
+    <div class="register-card">
+      <h2>Create Account</h2>
+
+      <div id="alertMessage" class="alert"></div>
+
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            placeholder="Choose a username!" 
+            required 
+            autocomplete="username"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="Enter your email!" 
+            required 
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="Create a strong password!" 
+            minlength="8" 
+            required 
+            autocomplete="new-password"
+          >
+        </div>
+
+        <button type="submit" class="btn-submit">Sign Up</button>
+      </form>
+
+      <p class="login-link">
+        Already have an account? <a href="index.html">Log in</a> <!-- change when login page is created -->
+      </p>
+    </div>
+  </main>
+
+</body>
+</html>
