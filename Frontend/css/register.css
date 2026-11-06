@@ -54,12 +54,12 @@ body {
 .side-text {
   flex: 1;
   min-width: 300px;
-  max-width: 450px;
+  max-width: 500px;
   color: #ffffff;
 }
 
 .side-text h2 {
-  font-size: 34px;
+  font-size: 38px;
   margin-bottom: 24px;
   line-height: 1.2;
 }
@@ -69,24 +69,27 @@ body {
 }
 
 .side-text h3 {
-  font-size: 20px;
+  font-size: 26px;
   color: #f59e0b; 
   margin-bottom: 4px;
 }
 
 .side-text p {
-  font-size: 15px;
+  font-size: 18px;
   color: #d1d5db;
   line-height: 1.5;
 }
 
 .register-card {
   background: #ffffff;
-  padding: 45px;
-  border-radius: 14px;
+  padding-left: 45px;
+  padding-right: 45px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 420px;
+  max-width: 500px;
   flex-shrink: 0;
 }
 
