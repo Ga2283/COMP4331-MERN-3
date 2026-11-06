@@ -34,13 +34,19 @@ app.post('/api/test-create', async (req, res) => {
 });
 
 mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
+  const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
     console.log('MongoDB connected');
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => console.log(`API running on port ${PORT}`));
-  })
-  .catch((err) => console.error('MongoDB connection error:', err.message));
+  } catch (err) {
+    console.error('MongoDB connection error:', err.message);
+    console.log('Retrying database connection in 5 seconds...');
+    setTimeout(connectDB, 5000);
+  }
+};
 
+connectDB();
 
 module.exports = app;
