@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in to your MyCollection account.">
+  <title>Log In | MyCollection</title>
+  <link rel="stylesheet" href="css/login.css">
+  <script src="login.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <a class="app-icon" href="login.html" aria-label="MyCollection home">
+      <img src="../logo.png" alt="" class="register-logo">
+      <h1 class="register-title">MyCollection</h1>
+    </a>
+  </header>
+
+  <main class="content-container">
+    <section class="side-text" aria-label="About MyCollection">
+      <h2>Everything you collect, in one spot!</h2>
+      <div class="feature-item">
+        <h3>Add</h3>
+        <p>Catalog every card, comic, and figure you own.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Share</h3>
+        <p>Show off your shelf with friends and fellow collectors.</p>
+      </div>
+      <div class="feature-item">
+        <h3>Keep it together</h3>
+        <p>Your whole collection, all in one place.</p>
+      </div>
+    </section>
+
+    <section class="register-card" aria-labelledby="loginHeading">
+      <h2 id="loginHeading">Welcome Back</h2>
+      <p class="intro">Log in to continue to your collection.</p>
+      <div id="alertMessage" class="alert" role="alert" aria-live="polite"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username"
+                 placeholder="Enter your username" required
+                 autocomplete="username" autocapitalize="none">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password"
+                 placeholder="Enter your password" required
+                 autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-submit" id="submitButton">Log In</button>
+      </form>
+
+      <p class="login-link">Don't have an account? <a href="register.html">Create an account</a></p>
+    </section>
+  </main>
+</body>
+</html>
