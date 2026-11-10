@@ -83,7 +83,19 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+const requireAuth = require('../middleware/auth');
 
+// GET /api/users/profile (Protected by JWT)
+router.get('/profile', requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('-password -verifyToken -verifyTokenExpires');
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 // GET /api/users/:id
 router.get('/:id', async (req, res) => {
   try {

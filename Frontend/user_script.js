@@ -1,194 +1,258 @@
-/**
- * MyCollection - Frontend Application Logic & API Integration Placeholder
- */
+document.addEventListener('DOMContentLoaded', () => {
+    let allCollectibles = []; 
+    let currentCategory = 'All';
+    let searchQuery = '';
 
-// Mock initial data matching layout requirements (4 per row x 3 rows = 12 per page)
-
-// App State
-let currentPage = 1;
-const itemsPerPage = 12; // 4 columns x 3 rows = 12 items
-let activeCategory = "All";
-let searchQuery = "";
-let fetchedItems = [];
-
-// DOM Elements
-const collectionGrid = document.getElementById("collectionGrid");
-const nextPageBtn = document.getElementById("nextPageBtn");
-const paginationInfo = document.getElementById("paginationInfo");
-const searchInput = document.getElementById("searchInput");
-const filterBtns = document.querySelectorAll(".filter-btn");
-const addModal = document.getElementById("addModal");
-const openAddModalBtn = document.getElementById("openAddModalBtn");
-const closeAddModalBtn = document.getElementById("closeAddModalBtn");
-const cancelModalBtn = document.getElementById("cancelModalBtn");
-const addItemForm = document.getElementById("addItemForm");
-
-// =========================================================================
-// API ENDPOINT SECTION (Easy insertion for MongoDB / Express Integration)
-// =========================================================================
-
-/**
- * SECTION: Fetch User Collection from Express/MongoDB Backend
- * Target Endpoint: GET /api/collection?page={page}&limit=12&category={category}&search={search}
- */
-async function fetchUserCollection(page = 1, category = "All", search = "") {
-    try {
-        /* 
-        ==================================================================
-        [INSERT YOUR AJAX / FETCH API CALL HERE WHEN BACKEND IS READY]
-        ------------------------------------------------------------------
-        const response = await fetch(`/api/collection?page=${page}&limit=12&category=${encodeURIComponent(category)}&search=${encodeURIComponent(search)}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}` // If JWT auth is used
-            }
-        });
-        
-        if (!response.ok) throw new Error("Failed to fetch collection");
-        const data = await response.json(); // Returns JSON response: { items: [], totalCount: 14, totalPages: 2 }
-        return data;
-        ==================================================================
-        */
-
-        const startIndex = 0;
-        const endIndex = page * itemsPerPage;
-        const visibleItems = filtered.slice(startIndex, endIndex);
-
-        return {
-            items: visibleItems,
-            totalCount: filtered.length,
-            hasMore: endIndex < filtered.length
-        };
-    } catch (error) {
-        console.error("Error fetching collection:", error);
-        return { items: [], totalCount: 0, hasMore: false };
-    }
-}
-
-/**
- * SECTION: Add New Collection Item to Backend
- * Target Endpoint: POST /api/collection
- */
-async function createCollectionItem(itemData) {
-    try {
-        /* 
-        ==================================================================
-        [INSERT YOUR AJAX / FETCH POST CALL HERE WHEN BACKEND IS READY]
-        ------------------------------------------------------------------
-        const response = await fetch('/api/collection', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify(itemData)
-        });
-
-        if (!response.ok) throw new Error("Failed to add item");
-        const newSavedItem = await response.json(); // Returns newly created JSON document
-        return newSavedItem;
-        ==================================================================
-        */
-
-
-    } catch (error) {
-        console.error("Error creating item:", error);
-        alert("Failed to create item.");
-    }
-}
-
-// =========================================================================
-// UI RENDER & PAGINATION LOGIC
-// =========================================================================
-
-async function renderCollection() {
-    const data = await fetchUserCollection(currentPage, activeCategory, searchQuery);
-    
-    collectionGrid.innerHTML = "";
-    
-    if (data.items.length === 0) {
-        collectionGrid.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
-                No items found in your collection.
-            </div>
-        `;
-        nextPageBtn.style.display = "none";
-        paginationInfo.innerText = "0 items";
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
         return;
     }
 
-    data.items.forEach(item => {
-        const badgeClass = item.category === "Cards" ? "badge-card" : 
-                           item.category === "Comic books" ? "badge-comic" : "badge-figurine"; 
-        const fallbackImg = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80";
+    const grid = document.getElementById('collectionGrid');
+    const userGreeting = document.getElementById('userGreeting');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const searchInput = document.getElementById('searchInput');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const paginationInfo = document.getElementById('paginationInfo');
+    const nextPageBtn = document.getElementById('nextPageBtn');
 
-        const card = document.createElement("div");
-        card.className = "collection-card";
-        card.innerHTML = `
-            <div class="card-image-wrapper">
-                <img src="${item.image || fallbackImg}" alt="${item.name}" onerror="this.src='${fallbackImg}'">
-                <span class="category-badge ${badgeClass}">${item.category}</span>
-            </div>
-            <div class="card-content">
-                <h4 class="card-title">${item.name}</h4>
-                <p class="card-description">${item.description || "No description provided."}</p>
-            </div>
-        `;
-        collectionGrid.appendChild(card);
-    });
+    // Add Modal Elements
+    const addModal = document.getElementById('addModal');
+    const openAddModalBtn = document.getElementById('openAddModalBtn');
+    const closeAddModalBtn = document.getElementById('closeAddModalBtn');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const addItemForm = document.getElementById('addItemForm');
 
-    // Update Pagination Info & Arrow Button visibility
-    paginationInfo.innerText = `Showing ${data.items.length} of ${data.totalCount} items`;
-    if (data.hasMore) {
-        nextPageBtn.style.display = "flex";
-    } else {
-        nextPageBtn.style.display = "none";
+    // Edit Modal Elements
+    const editModal = document.getElementById('editModal');
+    const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+    const cancelEditModalBtn = document.getElementById('cancelEditModalBtn');
+    const editItemForm = document.getElementById('editItemForm');
+
+    // 1. Fetch User Profile Data
+    async function loadUserProfile() {
+        try {
+            const res = await fetch('/api/users/profile', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Unauthorized');
+            const user = await res.json();
+            const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'My Account';
+            userGreeting.textContent = fullName;
+        } catch (err) {
+            console.error('Profile fetch failed:', err);
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        }
     }
-}
 
-// Event Listeners
-nextPageBtn.addEventListener("click", () => {
-    currentPage++;
-    renderCollection();
-});
-
-searchInput.addEventListener("input", (e) => {
-    searchQuery = e.target.value.trim();
-    currentPage = 1;
-    renderCollection();
-});
-
-filterBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-        filterBtns.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        activeCategory = btn.getAttribute("data-category");
-        currentPage = 1;
-        renderCollection();
+    // 2. Handle Logout
+    logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        window.location.href = '/login.html';
     });
+
+    // 3. Fetch and Render Collectibles
+    async function loadCollectibles() {
+        try {
+            const res = await fetch('/api/collectibles', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            allCollectibles = data.collectibles || [];
+            renderFilteredCollectibles();
+        } catch (err) {
+            console.error('Error loading items:', err);
+        }
+    }
+
+    // 4. Client-side Filtering & Rendering with Edit/Delete Buttons
+    function renderFilteredCollectibles() {
+        grid.innerHTML = '';
+
+        const filtered = allCollectibles.filter(item => {
+            const matchesCategory = currentCategory === 'All' || item.category === currentCategory;
+            const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                  (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
+            return matchesCategory && matchesSearch;
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #718096;">No collectibles found.</p>';
+            paginationInfo.textContent = `Showing 0 of 0`;
+            if (nextPageBtn) nextPageBtn.style.display = 'none';
+            return;
+        }
+
+        filtered.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'collection-card';
+            card.innerHTML = `
+                <div class="card-image-wrapper">
+                    <img src="${item.image || 'https://via.placeholder.com/150?text=No+Image'}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+                </div>
+                <div class="card-body">
+                    <span class="card-category">${item.category}</span>
+                    <h4 class="card-title">${item.name}</h4>
+                    <p class="card-desc">${item.description || 'No description provided.'}</p>
+                    <div class="card-actions" style="margin-top: 10px; display: flex; gap: 8px;">
+                        <button class="btn-secondary edit-btn" data-id="${item._id}" style="padding: 4px 10px; font-size: 12px; cursor: pointer;">Edit</button>
+                        <button class="btn-danger delete-btn" data-id="${item._id}" style="padding: 4px 10px; font-size: 12px; background: #e53e3e; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
+                    </div>
+                </div>
+            `;
+	  card.addEventListener('click', (e) => {
+                if (e.target.closest('.card-actions')) return;
+                card.classList.toggle('expanded');
+            });
+            grid.appendChild(card);
+        });
+
+        paginationInfo.textContent = `Showing ${filtered.length} of ${allCollectibles.length}`;
+        if (nextPageBtn) nextPageBtn.style.display = 'none';
+
+        // Attach Delete Listeners
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const id = e.target.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this collectible?')) {
+                    await deleteCollectible(id);
+                }
+            });
+        });
+
+        // Attach Edit Listeners
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.getAttribute('data-id');
+                openEditModal(id);
+            });
+        });
+    }
+
+    // 5. Delete Collectible API Call
+    async function deleteCollectible(id) {
+        try {
+            const res = await fetch(`/api/collectibles/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                loadCollectibles();
+            } else {
+                alert('Failed to delete item.');
+            }
+        } catch (err) {
+            console.error('Error deleting item:', err);
+        }
+    }
+
+    // 6. Open Edit Modal & Populate Data
+    function openEditModal(id) {
+        const item = allCollectibles.find(c => c._id === id);
+        if (!item) return;
+
+        document.getElementById('editItemId').value = item._id;
+        document.getElementById('editItemName').value = item.name;
+        document.getElementById('editItemCategory').value = item.category;
+        document.getElementById('editItemDescription').value = item.description || '';
+        document.getElementById('editItemImageUrl').value = item.image || '';
+
+        editModal.style.display = 'flex';
+    }
+
+    // 7. Submit Edit Form (PATCH)
+    editItemForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('editItemId').value;
+        const updatedData = {
+            name: document.getElementById('editItemName').value,
+            category: document.getElementById('editItemCategory').value,
+            description: document.getElementById('editItemDescription').value,
+            image: document.getElementById('editItemImageUrl').value
+        };
+
+        try {
+            const res = await fetch(`/api/collectibles/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updatedData)
+            });
+
+            if (res.ok) {
+                editModal.style.display = 'none';
+                loadCollectibles();
+            } else {
+                const errData = await res.json();
+                alert('Failed to update item: ' + (errData.error || 'Unknown error'));
+            }
+        } catch (err) {
+            console.error('Error updating item:', err);
+        }
+    });
+
+    // Search & Filter Event Listeners
+    searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim();
+        renderFilteredCollectibles();
+    });
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = btn.getAttribute('data-category');
+            renderFilteredCollectibles();
+        });
+    });
+
+    // Add Modal Handlers
+    openAddModalBtn.addEventListener('click', () => addModal.style.display = 'flex');
+    closeAddModalBtn.addEventListener('click', () => addModal.style.display = 'none');
+    cancelModalBtn.addEventListener('click', () => addModal.style.display = 'none');
+
+    // Edit Modal Close Handlers
+    closeEditModalBtn.addEventListener('click', () => editModal.style.display = 'none');
+    cancelEditModalBtn.addEventListener('click', () => editModal.style.display = 'none');
+
+    // Submit New Item Form
+    addItemForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newItem = {
+            name: document.getElementById('itemName').value,
+            category: document.getElementById('itemCategory').value,
+            description: document.getElementById('itemDescription').value,
+            image: document.getElementById('itemImageUrl').value
+        };
+
+        try {
+            const res = await fetch('/api/collectibles', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(newItem)
+            });
+
+            if (res.ok) {
+                addItemForm.reset();
+                addModal.style.display = 'none';
+                loadCollectibles();
+            } else {
+                const errData = await res.json();
+                alert('Failed to save item: ' + (errData.error || 'Unknown error'));
+            }
+        } catch (err) {
+            console.error('Error saving item:', err);
+        }
+    });
+
+    // Initial Load
+    loadUserProfile();
+    loadCollectibles();
 });
-
-// Modal Logic
-openAddModalBtn.addEventListener("click", () => addModal.classList.add("active"));
-closeAddModalBtn.addEventListener("click", () => addModal.classList.remove("active"));
-cancelModalBtn.addEventListener("click", () => addModal.classList.remove("active"));
-
-addItemForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const newItem = {
-        name: document.getElementById("itemName").value.trim(),
-        category: document.getElementById("itemCategory").value,
-        description: document.getElementById("itemDescription").value.trim(),
-        image: document.getElementById("itemImageUrl").value.trim()
-    };
-
-    await createCollectionItem(newItem);
-    addItemForm.reset();
-    addModal.classList.remove("active");
-    currentPage = 1;
-    renderCollection();
-});
-
-// Initial Render
-document.addEventListener("DOMContentLoaded", renderCollection);

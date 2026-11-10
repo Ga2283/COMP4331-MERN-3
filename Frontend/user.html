@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyCollection - Dashboard</title>
-    <!-- Local stylesheet reference (no external fonts or web links) -->
     <link rel="stylesheet" href="css/user_style.css">
 </head>
 <body>
@@ -15,9 +14,11 @@
                 <span class="logo-icon">📦</span>
                 <span class="logo-text">MyCollection</span>
             </div>
-            <div class="user-profile">
-                <span class="username">Gabriel Flores</span>
-                <div class="avatar">G</div>
+            <div class="user-nav-right" style="display: flex; align-items: center; gap: 15px;">
+                <div class="user-profile">
+                    <span class="username" id="userGreeting">Loading...</span>
+                </div>
+                <button id="logoutBtn" class="btn-secondary" style="padding: 6px 12px; font-size: 14px; cursor: pointer;">Log Out</button>
             </div>
         </header>
 
@@ -35,31 +36,32 @@
                     <button class="filter-btn" data-category="Cards">Cards</button>
                     <button class="filter-btn" data-category="Comic books">Comic books</button>
                     <button class="filter-btn" data-category="Figurines">Figurines</button>
+                    <button class="filter-btn" data-category="Misc.">Misc.</button>
                 </div>
 
                 <button class="add-btn" id="openAddModalBtn">+ Add to your collection</button>
             </section>
 
-            <!-- Collection Grid Container (4 columns x 3 rows = 12 items max per page) -->
+            <!-- Collection Grid Container -->
             <section class="grid-section">
                 <div class="grid-container" id="collectionGrid">
-                    <!-- Dynamic collection cards rendered via script.js -->
+                    <!-- Dynamic collection cards rendered via user_script.js -->
                 </div>
             </section>
 
-            <!-- Pagination Control (Arrow Down for next 12 items) -->
+            <!-- Pagination Control -->
             <section class="pagination-section" id="paginationSection">
                 <button class="arrow-down-btn" id="nextPageBtn" title="Load Next Page">
                     <span>▼</span>
                     <span class="btn-text">Load Next 12 Items</span>
                 </button>
-                <div class="pagination-info" id="paginationInfo">Showing 1-12 of 12</div>
+                <div class="pagination-info" id="paginationInfo">Showing 0 of 0</div>
             </section>
         </main>
     </div>
 
     <!-- Add Item Modal -->
-    <div class="modal-overlay" id="addModal">
+    <div class="modal-overlay" id="addModal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Add New Item</h3>
@@ -76,6 +78,7 @@
                         <option value="Cards">Cards</option>
                         <option value="Comic books">Comic books</option>
                         <option value="Figurines">Figurines</option>
+                        <option value="Misc.">Misc.</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -83,21 +86,9 @@
                     <textarea id="itemDescription" rows="3" placeholder="Mint condition, graded PSA 9..."></textarea>
                 </div>
                 
-                <!-- Image Input Mode Switcher (URL vs File Upload) -->
                 <div class="form-group">
-                    <label>Item Image</label>
-                    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                        <button type="button" class="mode-tab-btn active" id="tabUrlBtn">Paste URL</button>
-                        <button type="button" class="mode-tab-btn" id="tabFileBtn">Upload File</button>
-                    </div>
-                    
-                    <div id="urlInputContainer">
-                        <input type="url" id="itemImageUrl" placeholder="https://example.com/image.jpg">
-                    </div>
-                    
-                    <div id="fileInputContainer" style="display: none;">
-                        <input type="file" id="itemImageFile" accept="image/*" class="file-input-field">
-                    </div>
+                    <label for="itemImageUrl">Image URL</label>
+                    <input type="url" id="itemImageUrl" placeholder="https://example.com/image.jpg">
                 </div>
 
                 <div class="modal-footer">
@@ -107,7 +98,43 @@
             </form>
         </div>
     </div>
-
+<!-- Edit Item Modal -->
+<div class="modal-overlay" id="editModal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Item</h3>
+            <button class="close-btn" id="closeEditModalBtn">&times;</button>
+        </div>
+        <form id="editItemForm">
+            <input type="hidden" id="editItemId">
+            <div class="form-group">
+                <label for="editItemName">Item Name</label>
+                <input type="text" id="editItemName" required>
+            </div>
+            <div class="form-group">
+                <label for="editItemCategory">Category</label>
+                <select id="editItemCategory" required>
+                    <option value="Cards">Cards</option>
+                    <option value="Comic books">Comic books</option>
+                    <option value="Figurines">Figurines</option>
+                    <option value="Misc.">Misc.</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editItemDescription">Description</label>
+                <textarea id="editItemDescription" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editItemImageUrl">Image URL</label>
+                <input type="url" id="editItemImageUrl">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelEditModalBtn">Cancel</button>
+                <button type="submit" class="btn-primary">Update Item</button>
+            </div>
+        </form>
+    </div>
+</div>
     <script src="user_script.js"></script>
 </body>
 </html>

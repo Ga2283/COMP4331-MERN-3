@@ -195,13 +195,30 @@ body {
 .card-image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .category-badge {
     position: absolute;
     top: 10px;
-    left: 10px;
+
+.collection-card .card-desc {
+    display: none;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #a0aec0;
+}
+
+/* Show description when card is clicked/expanded */
+.collection-card.expanded .card-desc {
+    display: block;
+}
+
+/* Make the card look clickable */
+.collection-card {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}    left: 10px;
     font-size: 0.75rem;
     font-weight: 700;
     padding: 4px 10px;
@@ -233,7 +250,23 @@ body {
     color: var(--text-muted);
     line-height: 1.4;
 }
+/* Hide descriptions by default */
+.collection-card .card-desc {
+    display: none !important;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #a0aec0;
+}
 
+/* Only show when card has the expanded class */
+.collection-card.expanded .card-desc {
+    display: block !important;
+}
+
+.collection-card {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
 /* Pagination Arrow Down Section */
 .pagination-section {
     display: flex;
