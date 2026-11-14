@@ -86,9 +86,10 @@
                     <textarea id="itemDescription" rows="3" placeholder="Mint condition, graded PSA 9..."></textarea>
                 </div>
                 
+                <!-- CHANGED: Image URL input replaced with File Input -->
                 <div class="form-group">
-                    <label for="itemImageUrl">Image URL</label>
-                    <input type="url" id="itemImageUrl" placeholder="https://example.com/image.jpg">
+                    <label for="itemImageFile">Upload Image File</label>
+                    <input type="file" id="itemImageFile" name="imageFile" accept="image/jpeg,image/png,image/webp">
                 </div>
 
                 <div class="modal-footer">
@@ -98,43 +99,48 @@
             </form>
         </div>
     </div>
-<!-- Edit Item Modal -->
-<div class="modal-overlay" id="editModal" style="display: none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Edit Item</h3>
-            <button class="close-btn" id="closeEditModalBtn">&times;</button>
+
+    <!-- Edit Item Modal -->
+    <div class="modal-overlay" id="editModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Item</h3>
+                <button class="close-btn" id="closeEditModalBtn">&times;</button>
+            </div>
+            <form id="editItemForm">
+                <input type="hidden" id="editItemId">
+                <div class="form-group">
+                    <label for="editItemName">Item Name</label>
+                    <input type="text" id="editItemName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editItemCategory">Category</label>
+                    <select id="editItemCategory" required>
+                        <option value="Cards">Cards</option>
+                        <option value="Comic books">Comic books</option>
+                        <option value="Figurines">Figurines</option>
+                        <option value="Misc.">Misc.</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editItemDescription">Description</label>
+                    <textarea id="editItemDescription" rows="3"></textarea>
+                </div>
+                
+                <!-- CHANGED: Edit Image URL replaced with File Input (Optional for updates) -->
+                <div class="form-group">
+                    <label for="editItemImageFile">Replace Image File (Optional)</label>
+		    <input type="file" id="editItemImageFile" name="imageFile" accept="image/jpeg,image/png,image/webp">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelEditModalBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Update Item</button>
+                </div>
+            </form>
         </div>
-        <form id="editItemForm">
-            <input type="hidden" id="editItemId">
-            <div class="form-group">
-                <label for="editItemName">Item Name</label>
-                <input type="text" id="editItemName" required>
-            </div>
-            <div class="form-group">
-                <label for="editItemCategory">Category</label>
-                <select id="editItemCategory" required>
-                    <option value="Cards">Cards</option>
-                    <option value="Comic books">Comic books</option>
-                    <option value="Figurines">Figurines</option>
-                    <option value="Misc.">Misc.</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="editItemDescription">Description</label>
-                <textarea id="editItemDescription" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="editItemImageUrl">Image URL</label>
-                <input type="url" id="editItemImageUrl">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary" id="cancelEditModalBtn">Cancel</button>
-                <button type="submit" class="btn-primary">Update Item</button>
-            </div>
-        </form>
     </div>
-</div>
+
     <script src="user_script.js"></script>
 </body>
 </html>

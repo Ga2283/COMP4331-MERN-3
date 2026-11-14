@@ -15,17 +15,17 @@ const collectibleSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ['Cards', 'Comic books', 'Figurines','Misc.'],
+      enum: ['Cards', 'Comic books', 'Figurines', 'Misc.'],
     },
     description: {
       type: String,
       trim: true,
       default: '',
     },
-    image: {
+    imagePath: {
       type: String,
+      required: true,
       trim: true,
-      default: '',
     },
   },
   { timestamps: true }

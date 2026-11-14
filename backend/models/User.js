@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     isVerified: { type: Boolean, default: false },
     verifyToken: String, // sent in the verification email link
     verifyTokenExpires: Date,
+    
   },
   { timestamps: true }
 );

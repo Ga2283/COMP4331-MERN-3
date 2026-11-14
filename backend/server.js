@@ -2,10 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path'); // <--- 1. Require path
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// <--- 2. Serve uploaded images publicly
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/api/health', (req, res) => {
   const databaseReady = mongoose.connection.readyState === 1;
@@ -33,8 +37,7 @@ app.post('/api/test-create', async (req, res) => {
   }
 });
 
-mongoose
-  const connectDB = async () => {
+const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('MongoDB connected');

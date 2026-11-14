@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
-	  card.addEventListener('click', (e) => {
+            card.addEventListener('click', (e) => {
                 if (e.target.closest('.card-actions')) return;
                 card.classList.toggle('expanded');
             });
@@ -157,33 +157,37 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('editItemName').value = item.name;
         document.getElementById('editItemCategory').value = item.category;
         document.getElementById('editItemDescription').value = item.description || '';
-        document.getElementById('editItemImageUrl').value = item.image || '';
+        // Note: File inputs cannot be programmatically pre-filled with values for security reasons.
 
         editModal.style.display = 'flex';
     }
 
-    // 7. Submit Edit Form (PATCH)
+    // 7. Submit Edit Form (PATCH with FormData)
     editItemForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('editItemId').value;
-        const updatedData = {
-            name: document.getElementById('editItemName').value,
-            category: document.getElementById('editItemCategory').value,
-            description: document.getElementById('editItemDescription').value,
-            image: document.getElementById('editItemImageUrl').value
-        };
+
+        const formData = new FormData();
+        formData.append('name', document.getElementById('editItemName').value);
+        formData.append('category', document.getElementById('editItemCategory').value);
+        formData.append('description', document.getElementById('editItemDescription').value);
+
+        const imageInput = document.getElementById('editItemImageFile');
+        if (imageInput && imageInput.files[0]) {
+            formData.append('imageFile', imageInput.files[0]);
+        }
 
         try {
             const res = await fetch(`/api/collectibles/${id}`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(updatedData)
+                body: formData
             });
 
             if (res.ok) {
+                editItemForm.reset();
                 editModal.style.display = 'none';
                 loadCollectibles();
             } else {
@@ -192,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (err) {
             console.error('Error updating item:', err);
+            alert('Error updating item');
         }
     });
 
@@ -219,24 +224,27 @@ document.addEventListener('DOMContentLoaded', () => {
     closeEditModalBtn.addEventListener('click', () => editModal.style.display = 'none');
     cancelEditModalBtn.addEventListener('click', () => editModal.style.display = 'none');
 
-    // Submit New Item Form
+    // 8. Submit New Item Form (POST with FormData)
     addItemForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const newItem = {
-            name: document.getElementById('itemName').value,
-            category: document.getElementById('itemCategory').value,
-            description: document.getElementById('itemDescription').value,
-            image: document.getElementById('itemImageUrl').value
-        };
+
+        const formData = new FormData();
+        formData.append('name', document.getElementById('itemName').value);
+        formData.append('category', document.getElementById('itemCategory').value);
+        formData.append('description', document.getElementById('itemDescription').value);
+
+        const imageInput = document.getElementById('itemImageFile');
+        if (imageInput && imageInput.files[0]) {
+            formData.append('imageFile', imageInput.files[0]);
+        }
 
         try {
             const res = await fetch('/api/collectibles', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(newItem)
+                body: formData
             });
 
             if (res.ok) {
@@ -249,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (err) {
             console.error('Error saving item:', err);
+            alert('Error saving item');
         }
     });
 

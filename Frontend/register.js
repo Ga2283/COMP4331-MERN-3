@@ -17,14 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     alertMessage.style.color = '';
 
     try {
-      const response = await fetch('/api/users/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ firstName, lastName, username, email, password }),
-      });
-
+	const response = await fetch('/api/users/register', {
+  	method: 'POST',
+  	headers: {
+    	'Content-Type': 'application/json',
+  	},
+  	body: JSON.stringify({ firstName, lastName, username, email, password }),
+	});
       const data = await response.json();
 
       if (!response.ok) {

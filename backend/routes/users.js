@@ -3,15 +3,17 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const path = require('path');
 const User = require('../models/User');
 const { sendVerificationEmail } = require('../utils/sendEmail');
 
 const router = express.Router();
 
-// POST /api/users/register
+// POST /api/users/register  middleware)
 router.post('/register', async (req, res) => {
   try {
     const { firstName, lastName, email, username, password } = req.body;
+
     if (!firstName || !lastName || !email || !username || !password)
       return res.status(400).json({ error: 'All fields are required' });
 
@@ -22,7 +24,10 @@ router.post('/register', async (req, res) => {
     const verifyToken = crypto.randomBytes(32).toString('hex');
 
     const user = await User.create({
-      firstName, lastName, email, username,
+      firstName, 
+      lastName, 
+      email, 
+      username,
       password: hashed,
       verifyToken,
       verifyTokenExpires: Date.now() + 24 * 60 * 60 * 1000, // 24h
@@ -34,7 +39,7 @@ router.post('/register', async (req, res) => {
     sendVerificationEmail(user.email, verifyToken).catch((e) => console.error('Email failed:', e.message));
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -83,6 +88,7 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 const requireAuth = require('../middleware/auth');
 
 // GET /api/users/profile (Protected by JWT)
@@ -96,6 +102,7 @@ router.get('/profile', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 // GET /api/users/:id
 router.get('/:id', async (req, res) => {
   try {

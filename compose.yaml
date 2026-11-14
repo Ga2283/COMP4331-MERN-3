@@ -17,11 +17,11 @@ services:
     ports:
       - "${API_PORT:-5000}:5000"
     environment:
-      MONGO_URI: mongodb://mongo:27017/mycollection
+      MONGO_URI: mongodb+srv://mister2283_db_user:Gogeralt44@cluster0.ayfdihx.mongodb.net/
       PORT: 5000
       JWT_SECRET: ${JWT_SECRET:-local-development-secret-change-me}
       EMAIL_USER: ${EMAIL_USER:-c1bdba001@smtp-brevo.com}
-      SMTP_KEY: ${SENDINBLUE_KEY}
+      EMAIL_PASS: ${EMAIL_PASS:-xsmtpsib-155808af613002b4e1381e239722d6528111c7978eab9dc47a3dd167dc9a157b-SigaFTefChXD1TQF}
       BASE_URL: ${BASE_URL:-https://mern.gabrielf2283.com}
 
   frontend:
