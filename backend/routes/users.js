@@ -77,8 +77,9 @@ router.post('/login', async (req, res) => {
 
     // comment out for testing if email isn't set up
     if (!user.isVerified) return res.status(403).json({ error: 'Verify your email first' });
+    if (user.isSuspended) return res.status(403).json({ error: 'Account suspended' });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({userId: user._id,tokenVersion: user.tokenVersion ?? 0,},process.env.JWT_SECRET,{ expiresIn: '1d' });
 
     // strip sensitive fields before returning
     const { password: _, verifyToken, verifyTokenExpires, ...userData } = user.toObject();

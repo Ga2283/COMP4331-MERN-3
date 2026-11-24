@@ -21,6 +21,7 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/users', require('./routes/users'));
 app.use('/api/collectibles', require('./routes/collectibles'));
+app.use('/api/admin', require('./routes/admin'));
 
 app.post('/api/test-create', async (req, res) => {
   try {
