@@ -1,19 +1,22 @@
-/* ==========================================================
-   IN-HOUSE CSS STYLES (No External Links, No External Fonts)
-   ========================================================== */
-
 :root {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --card-bg: #334155;
-    --accent: #38bdf8;
-    --accent-hover: #0284c7;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --border-color: #475569;
-    --badge-card: #f59e0b;
-    --badge-comic: #ec4899;
-    --badge-figurine: #10b981;
+    --bg-primary: #d8c8b8;
+    --bg-secondary: #efe6dc;
+    --card-bg: #e3d5c5;
+    --accent: #b8732d;
+    --accent-hover: #995c1e;
+    --text-main: #2a1e17;
+    --text-muted: #6b5849;
+    --border-color: #c4b09b;
+
+    --badge-card: #c97a2b;
+    --badge-comic: #b84a39;
+    --badge-figurine: #4f7a57;
+
+    --wood-light: #c4834f;
+    --wood-mid: #93582c;
+    --wood-dark: #5e3516;
+    --wood-edge: #dfa06c;
+    --bracket-iron: #3b2d24;
 }
 
 * {
@@ -45,6 +48,7 @@ body {
     border-radius: 12px;
     margin-bottom: 24px;
     border: 1px solid var(--border-color);
+    box-shadow: 0 6px 16px rgba(42, 30, 23, 0.14);
 }
 
 .logo {
@@ -71,7 +75,7 @@ body {
     width: 36px;
     height: 36px;
     background-color: var(--accent);
-    color: #0f172a;
+    color: #fff8f0;
     font-weight: 700;
     border-radius: 50%;
     display: flex;
@@ -114,6 +118,10 @@ body {
     transition: border-color 0.2s;
 }
 
+.search-bar input::placeholder {
+    color: var(--text-muted);
+}
+
 .search-bar input:focus {
     border-color: var(--accent);
 }
@@ -138,14 +146,15 @@ body {
     transition: all 0.2s;
 }
 
-.filter-btn.active, .filter-btn:hover {
+.filter-btn.active,
+.filter-btn:hover {
     background-color: var(--card-bg);
     color: var(--text-main);
 }
 
 .add-btn {
     background-color: var(--accent);
-    color: #0f172a;
+    color: #fff8f0;
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
@@ -161,35 +170,91 @@ body {
 /* 4 Columns x 3 Rows Collection Grid (12 items per view) */
 .grid-section {
     min-height: 500px;
+    padding: 14px 10px 24px;
+    border-radius: 14px;
 }
 
 .grid-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 22px;
+    row-gap: 34px;
 }
 
-/* Collection Card Item */
+/* Collection Card Item sitting on a Wall-Mounted Wooden Shelf */
 .collection-card {
+    position: relative;
     background-color: var(--bg-secondary);
     border-radius: 12px;
-    overflow: hidden;
     border: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: visible;
+    cursor: pointer;
+    box-shadow: 0 5px 10px rgba(42, 30, 23, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .collection-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border-color: var(--wood-light);
+    box-shadow: 0 9px 14px rgba(42, 30, 23, 0.35);
+}
+
+.collection-card::before {
+    content: "";
+    position: absolute;
+    bottom: -7px;
+    left: 18%;
+    width: 14px;
+    height: 11px;
+    background: linear-gradient(135deg, #544135 0%, var(--bracket-iron) 100%);
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 3px 5px rgba(42, 30, 23, 0.45);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.collection-card::after {
+    content: "";
+    position: relative;
+    z-index: 1;
+    display: block;
+    height: 18px;
+    margin: 4px -8px 0;
+    border-radius: 3px 3px 6px 6px;
+    border-top: 1px solid var(--wood-edge);
+    background:
+        /* Wood grain streaks */
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 225, 190, 0.08) 0px,
+            rgba(255, 225, 190, 0.08) 2px,
+            transparent 2px,
+            transparent 13px
+        ),
+        /* Cylindrical wood shading */
+        linear-gradient(
+            180deg,
+            var(--wood-light) 0%,
+            var(--wood-mid) 52%,
+            var(--wood-dark) 100%
+        );
+    box-shadow:
+        0 10px 16px rgba(42, 30, 23, 0.45),
+        0 3px 6px rgba(42, 30, 23, 0.3),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
 }
 
 .card-image-wrapper {
     position: relative;
     width: 100%;
     height: 180px;
-    background-color: #0f172a;
+    background-color: var(--card-bg);
+    overflow: hidden;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .card-image-wrapper img {
@@ -201,30 +266,14 @@ body {
 .category-badge {
     position: absolute;
     top: 10px;
-
-.collection-card .card-desc {
-    display: none;
-    margin-top: 8px;
-    font-size: 13px;
-    color: #a0aec0;
-}
-
-/* Show description when card is clicked/expanded */
-.collection-card.expanded .card-desc {
-    display: block;
-}
-
-/* Make the card look clickable */
-.collection-card {
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}    left: 10px;
+    left: 10px;
     font-size: 0.75rem;
     font-weight: 700;
     padding: 4px 10px;
     border-radius: 20px;
     text-transform: uppercase;
     color: #fff;
+    box-shadow: 0 2px 6px rgba(42, 30, 23, 0.35);
 }
 
 .badge-card { background-color: var(--badge-card); }
@@ -250,29 +299,25 @@ body {
     color: var(--text-muted);
     line-height: 1.4;
 }
-/* Hide descriptions by default */
+
+/* Hide descriptions by default; expand when toggled */
 .collection-card .card-desc {
-    display: none !important;
+    display: none;
     margin-top: 8px;
     font-size: 13px;
-    color: #a0aec0;
+    color: var(--text-muted);
 }
 
-/* Only show when card has the expanded class */
 .collection-card.expanded .card-desc {
-    display: block !important;
+    display: block;
 }
 
-.collection-card {
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
 /* Pagination Arrow Down Section */
 .pagination-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 32px;
+    margin-top: 36px;
     gap: 8px;
 }
 
@@ -292,7 +337,7 @@ body {
 
 .arrow-down-btn:hover {
     background-color: var(--accent);
-    color: #0f172a;
+    color: #fff8f0;
     transform: translateY(2px);
 }
 
@@ -309,7 +354,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(42, 30, 23, 0.65);
     align-items: center;
     justify-content: center;
     z-index: 1000;
@@ -326,6 +371,7 @@ body {
     width: 100%;
     max-width: 480px;
     padding: 24px;
+    box-shadow: 0 16px 36px rgba(42, 30, 23, 0.35);
 }
 
 .modal-header {
@@ -343,6 +389,10 @@ body {
     cursor: pointer;
 }
 
+.close-btn:hover {
+    color: var(--text-main);
+}
+
 .form-group {
     margin-bottom: 16px;
 }
@@ -354,18 +404,27 @@ body {
     color: var(--text-muted);
 }
 
-.form-group input, .form-group select, .form-group textarea {
+.form-group input,
+.form-group select,
+.form-group textarea {
     width: 100%;
     padding: 10px;
-    background-color: var(--bg-primary);
+    background-color: #ffffff;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     color: var(--text-main);
     outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--accent);
 }
 
 .mode-tab-btn {
-    background: var(--bg-primary);
+    background: #ffffff;
     border: 1px solid var(--border-color);
     color: var(--text-muted);
     padding: 6px 12px;
@@ -382,7 +441,7 @@ body {
 
 .file-input-field {
     padding: 6px;
-    background: var(--bg-primary);
+    background: #ffffff;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     color: var(--text-main);
@@ -403,16 +462,26 @@ body {
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: var(--card-bg);
 }
 
 .btn-primary {
     background-color: var(--accent);
-    color: #0f172a;
+    color: #fff8f0;
     border: none;
     padding: 8px 16px;
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
 }
 
 /* Responsive Breakpoints */
