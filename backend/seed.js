@@ -9,9 +9,15 @@ async function seed() {
   const username = process.env.SEED_USERNAME || 'demo';
   const email = (process.env.SEED_EMAIL || 'demo@example.com').toLowerCase();
   const password = process.env.SEED_PASSWORD;
+  const adminUsername = process.env.SEED_ADMIN_USERNAME || 'admin';
+  const adminEmail = (process.env.SEED_ADMIN_EMAIL || 'admin@example.com').toLowerCase();
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD || password;
 
   if (!password) {
     throw new Error('Set SEED_PASSWORD before running the seed service.');
+  }
+  if (username === adminUsername || email === adminEmail) {
+    throw new Error('The seeded user and admin must have different usernames and email addresses.');
   }
 
   await mongoose.connect(process.env.MONGO_URI);
@@ -22,6 +28,7 @@ async function seed() {
     { username },
     {
       $set: {
+        role: 'user',
         firstName: 'Demo',
         lastName: 'User',
         username,
@@ -35,21 +42,44 @@ async function seed() {
     { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
   );
 
+  const adminPasswordHash = await bcrypt.hash(adminPassword, 10);
+  await User.findOneAndUpdate(
+    { username: adminUsername },
+    {
+      $set: {
+        role: 'admin',
+        firstName: 'Seeded',
+        lastName: 'Admin',
+        username: adminUsername,
+        email: adminEmail,
+        password: adminPasswordHash,
+        isVerified: true,
+        isSuspended: false,
+        verifyToken: undefined,
+        verifyTokenExpires: undefined,
+      },
+    },
+    { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
+  );
+
   const demoCollectibles = [
     {
       name: 'Vintage Trading Card',
       category: 'Cards',
       description: 'A sample collectible card.',
+      imagePath: 'https://via.placeholder.com/150',
     },
     {
       name: 'Classic Comic Issue',
       category: 'Comic books',
       description: 'A sample comic book.',
+      imagePath: 'https://via.placeholder.com/150',
     },
     {
       name: 'Display Figurine',
       category: 'Figurines',
       description: 'A sample collectible figurine.',
+      imagePath: 'https://via.placeholder.com/150',
     },
   ];
 
@@ -63,7 +93,7 @@ async function seed() {
     demoCollectibles.map((item) => ({ ...item, user: user._id }))
   );
 
-  console.log(`Seeded demo account "${username}" and ${demoCollectibles.length} collectibles.`);
+  console.log(`Seeded user "${username}", admin "${adminUsername}", and ${demoCollectibles.length} collectibles.`);
 }
 
 seed()
