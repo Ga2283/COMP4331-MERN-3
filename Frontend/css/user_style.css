@@ -66,6 +66,12 @@ body {
         0 2px 6px rgba(42, 30, 23, 0.18);
 }
 
+.nav-logo {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
 .user-profile {
     display: flex;
     align-items: center;
