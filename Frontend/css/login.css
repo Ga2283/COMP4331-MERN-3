@@ -1,3 +1,5 @@
+@import url('https://api.fontshare.com/v2/css?f[]=erode@400,500,600,700&display=swap');
+
 :root {
   --bg-primary: #d8c8b8;
   --bg-secondary: #efe6dc;
@@ -21,7 +23,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Erode', Georgia, serif;
 }
 
 body {
@@ -50,16 +52,19 @@ body {
 }
 
 .register-logo {
-  height: 100px;
+  height: 130px;
   width: auto;
   object-fit: contain;
 }
 
 .register-title {
-  font-size: 42px;
+  font-size: 60px;
   color: var(--text-main);
   font-weight: 700;
   letter-spacing: 0.5px;
+  text-shadow:
+    0 1px 0 rgba(255, 248, 240, 0.7),
+    0 3px 8px rgba(42, 30, 23, 0.22);
 }
 
 .content-container {
@@ -251,7 +256,7 @@ body {
 @media (max-width: 700px) {
   body { padding: 28px 18px; }
   .header { margin-bottom: 30px; }
-  .register-logo { height: 60px; }
+  .register-logo { height: 130px; }
   .register-title { font-size: 34px; }
   .content-container { gap: 30px; }
   .side-text { min-width: 0; text-align: center; }
