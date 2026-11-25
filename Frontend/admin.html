@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyCollection Admin</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="navbar">
+      <div class="logo">
+        <img src="logo.png" alt="MyCollection Logo" class="nav-logo">
+        <span class="logo-text">MyCollection</span>
+        <span class="admin-badge">Admin</span>
+      </div>
+      <div class="user-nav-right">
+        <div class="user-profile">
+          <span class="username" id="adminGreeting">Admin</span>
+        </div>
+        <button type="button" id="logoutBtn" class="btn-secondary nav-link-btn">Log Out</button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div id="alertMessage" class="alert" role="alert" aria-live="polite"></div>
+
+      <section class="controls-section" aria-label="User search and filters">
+        <div class="search-bar">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input type="text" id="userSearchInput" placeholder="Search by username, name, or email...">
+        </div>
+
+        <div class="filter-tabs" role="group" aria-label="Filter users by status">
+          <button type="button" class="filter-btn active" data-filter="All">All Users</button>
+          <button type="button" class="filter-btn" data-filter="Active">Active</button>
+          <button type="button" class="filter-btn" data-filter="Suspended">Suspended</button>
+        </div>
+      </section>
+
+      <section class="grid-section" aria-label="Registered user accounts">
+        <div class="grid-container" id="usersGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="viewAccountModal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="viewAccountTitle">
+      <div class="modal-header">
+        <h3 id="viewAccountTitle">Account Details</h3>
+        <button type="button" class="close-btn" id="closeViewModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="account-details" id="accountDetailsBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="closeViewModalFooterBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="passwordModal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+      <div class="modal-header">
+        <h3 id="passwordModalTitle">Change User Password</h3>
+        <button type="button" class="close-btn" id="closePasswordModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="changePasswordForm">
+        <input type="hidden" id="passwordUserId">
+        <p class="intro" id="passwordTargetLabel">Updating password...</p>
+
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input type="password" id="newPassword" name="newPassword" minlength="8"
+                 placeholder="Enter new password (min. 8 characters)" required autocomplete="new-password">
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" minlength="8"
+                 placeholder="Re-enter new password" required autocomplete="new-password">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelPasswordModalBtn">Cancel</button>
+          <button type="submit" class="btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="deleteUserModal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="deleteUserTitle">
+      <div class="modal-header">
+        <h3 id="deleteUserTitle">Delete User Account</h3>
+        <button type="button" class="close-btn" id="closeDeleteModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="deleteUserForm">
+        <input type="hidden" id="deleteUserId">
+        <p class="intro" id="deleteUserWarning">
+          Are you sure you want to permanently delete this user account?
+        </p>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelDeleteModalBtn">Cancel</button>
+          <button type="submit" class="btn-danger">Delete User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
