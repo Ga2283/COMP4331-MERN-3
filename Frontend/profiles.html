@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCollection - Profiles</title>
+    <link rel="stylesheet" href="css/user_style.css">
+    <link rel="stylesheet" href="css/profiles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="navbar">
+            <div class="logo">
+                <span class="logo-icon">📦</span>
+                <span class="logo-text">MyCollection</span>
+            </div>
+            <div class="user-nav-right">
+                <div class="user-profile">
+                    <span class="username" id="userGreeting">Loading...</span>
+                </div>
+                <a href="dashboard.html" class="btn-secondary nav-link-btn">My Collection</a>
+                <button id="logoutBtn" class="btn-secondary logout-btn">Log Out</button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- User Search Controls -->
+            <section class="profiles-search-wrapper">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="userSearchInput" placeholder="Search other users by username...">
+                </div>
+                <button class="add-btn" id="userSearchBtn">Search</button>
+            </section>
+
+            <!-- Matching Usernames List -->
+            <section class="user-results-list" id="userResultsList">
+                <!-- Populated dynamically by profiles_script.js -->
+            </section>
+        </main>
+    </div>
+
+    <!-- User Collection Popup Modal -->
+    <div class="modal-overlay" id="userCollectionModal">
+        <div class="modal-content collection-modal-content">
+            <div class="modal-header">
+                <h3 id="modalUsernameTitle">Username's Collection</h3>
+                <button class="close-btn" id="closeUserModalBtn">&times;</button>
+            </div>
+
+            <!-- Search & Category Filter inside the Popup -->
+            <div class="modal-controls">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="modalSearchInput" placeholder="Search their collection...">
+                </div>
+
+                <div class="filter-tabs" id="modalFilterTabs">
+                    <button class="filter-btn active" data-category="All">All</button>
+                    <button class="filter-btn" data-category="Cards">Cards</button>
+                    <button class="filter-btn" data-category="Comic books">Comic books</button>
+                    <button class="filter-btn" data-category="Figurines">Figurines</button>
+                    <button class="filter-btn" data-category="Misc.">Misc.</button>
+                </div>
+            </div>
+
+            <!-- Read-Only Collection Grid -->
+            <div class="modal-grid-scroll">
+                <div class="grid-container" id="modalCollectionGrid">
+                    <!-- Selected user's items render here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="profiles_script.js"></script>
+</body>
+</html>
